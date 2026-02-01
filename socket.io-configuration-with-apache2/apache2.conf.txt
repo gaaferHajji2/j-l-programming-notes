@@ -1,0 +1,24 @@
+<VirtualHost *:80>
+       ServerName real-time-backend.alyousser.com
+       ProxyRequests Off
+       ProxyPreserveHost On
+       ProxyVia Full
+       ProxyTimeout 600
+       Timeout 600
+       <Proxy *>
+           Require all granted
+       </Proxy>
+       <Location /socket.io>
+           ProxyPass http://localhost:3000/socket.io
+           ProxyPassReverse http://localhost:3000/socket.io
+           RewriteEngine On
+           RewriteCond %{HTTP:Upgrade} =websocket [NC]
+           RewriteRule /(.*) ws://localhost:3000/$1 [P,L]
+           RewriteCond %{HTTP:Upgrade} !=websocket [NC]
+           RewriteRule /(.*) http://localhost:3000/$1 [P,L]
+       </Location>
+       <Location />
+           ProxyPass http://localhost:3000/
+           ProxyPassReverse http://localhost:3000/
+       </Location>
+</VirtualHost>

@@ -1,0 +1,22 @@
+<VirtualHost *:80>
+            ServerName real-time-backend.alyousser.com
+
+            ErrorLog ${APACHE_LOG_DIR}/error_real_time_backend.log
+            CustomLog ${APACHE_LOG_DIR}/access_real_time_backend.log combined
+
+            ProxyRequests off
+            ProxyVia on
+
+            RewriteEngine On
+            RewriteCond %{REQUEST_URI}  ^/socket.io            [NC]
+            RewriteCond %{QUERY_STRING} transport=websocket    [NC]
+            RewriteRule /(.*)           ws://localhost:3000/$1 [P,L]
+
+	    ProxyPass        /socket.io ws://localhost:3000/socket.io
+            ProxyPassReverse /socket.io ws://localhost:3000/socket.io
+
+            <Location />
+                ProxyPass http://127.0.0.1:3000/
+                ProxyPassReverse http://127.0.0.1:3000/
+            </Location>
+</VirtualHost>
