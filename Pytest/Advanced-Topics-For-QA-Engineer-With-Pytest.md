@@ -43,7 +43,7 @@ def browser(request):
 
 @pytest.mark.parametrize("resolution", ["1920x1080", "1366x768"])
 def test_responsive_layout(browser, resolution):
-    # Runs 9 times (3 browsers × 3 resolutions)
+    # Runs 6 times (3 browsers × 2 resolutions)
     pass
 ```
 
